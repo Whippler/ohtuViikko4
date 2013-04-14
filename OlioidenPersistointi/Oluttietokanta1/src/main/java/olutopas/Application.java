@@ -74,13 +74,13 @@ public class Application {
         // luodaan olut ilman panimon asettamista
         Beer b = new Beer("Märzen");
         server.save(b);
-        
+
         // jotta saamme panimon asetettua, tulee olot lukea uudelleen kannasta
-        b = server.find(Beer.class, b.getId());        
-        brewery = server.find(Brewery.class, brewery.getId());        
+        b = server.find(Beer.class, b.getId());
+        brewery = server.find(Brewery.class, brewery.getId());
         brewery.addBeer(b);
         server.save(brewery);
-        
+
         server.save(new Brewery("Paulaner"));
     }
 
@@ -110,6 +110,13 @@ public class Application {
         System.out.println(foundBrewery);
         for (Beer bier : foundBrewery.getBeers()) {
             System.out.println("   " + bier.getName());
+        }
+    }
+
+    private void listBeers() {
+        List<Beer> beers = server.find(Beer.class).findList();
+        for (Beer beer : beers) {
+            System.out.println(beer);
         }
     }
 
@@ -143,6 +150,21 @@ public class Application {
         brewery.addBeer(new Beer(name));
         server.save(brewery);
         System.out.println(name + " added to " + brewery.getName());
+    }
+
+    private void addBrewery() {
+
+        System.out.print("beer to add: ");
+        String name = scanner.nextLine();
+        Brewery brewery = server.find(Brewery.class).where().like("name", name).findUnique();
+        if (brewery != null){
+            return;
+        }
+        
+        Brewery newBrewery = new Brewery(name);
+        server.save(newBrewery);
+        
+        
     }
 
     private void deleteBeer() {
