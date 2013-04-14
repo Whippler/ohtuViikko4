@@ -41,12 +41,16 @@ public class Application {
             } else if (command.equals("4")) {
                 listBreweries();
             } else if (command.equals("5")) {
-                deleteBeer();            
+                deleteBeer();
             } else if (command.equals("6")) {
-                addPub();            
+                addPub();
             } else if (command.equals("7")) {
                 addBeerToPub();
-            }  else {
+            } else if (command.equals("8")) {
+                showBeersInPub();
+            } else if (command.equals("9")) {
+                listPubs();
+            } else {
                 System.out.println("unknown command");
             }
 
@@ -64,8 +68,10 @@ public class Application {
         System.out.println("3   add beer");
         System.out.println("4   list breweries");
         System.out.println("5   delete beer");
-        System.out.println("6   add pub");               
-        System.out.println("7   add beer to pub");                      
+        System.out.println("6   add pub");
+        System.out.println("7   add beer to pub");
+        System.out.println("8   show beers in pub");
+        System.out.println("9   list pubs");
         System.out.println("0   quit");
         System.out.println("");
     }
@@ -119,6 +125,21 @@ public class Application {
         }
     }
 
+    private void showBeersInPub() {
+        System.out.print("enter Pub: ");
+        String n = scanner.nextLine();
+
+        Pub foundPub = server.find(Pub.class).where().like("name", n).findUnique();
+        if (foundPub == null) {
+            System.out.println("Pub is not listed!");
+        } else {
+            List<Beer> beers = foundPub.getBeers();
+            for (Beer beer : beers) {
+                System.out.println(beer);
+            }
+        }
+    }
+
     private void findBrewery() {
         System.out.print("brewery to find: ");
         String n = scanner.nextLine();
@@ -139,6 +160,13 @@ public class Application {
         List<Brewery> breweries = server.find(Brewery.class).findList();
         for (Brewery brewery : breweries) {
             System.out.println(brewery);
+        }
+    }
+
+    private void listPubs() {
+        List<Pub> pubs = server.find(Pub.class).findList();
+        for (Pub pub : pubs) {
+            System.out.println(pub);
         }
     }
 
@@ -218,5 +246,4 @@ public class Application {
         pub.addBeer(beer);
         server.save(pub);
     }
-
 }
